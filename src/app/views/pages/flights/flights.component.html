@@ -21,59 +21,64 @@
         <button mat-raised-button color="primary" (click)="getJourney()">Send</button>
     </form>
     <div class="JourneyMainWrap" *ngIf="showJourney">
-        <div class="journeyInfo">
-            <div class="dataItem center">
-                <span class="label"> ---Journey Info--- </span>
-                <br><br>
+        <div class="JourneyWrap" *ngIf="JourneyRes.$flights.length; else Void">
+            <div class="journeyInfo">
+                <div class="dataItem center">
+                    <span class="label"> ---Journey Info--- </span>
+                    <br><br>
+                </div>
+                <div class="dataItem">
+                    <span class="label">Origin: </span>
+                    <span class="data">{{JourneyRes.$origins}}</span>
+                </div>
+                <div class="dataItem">
+                    <span class="label">Destination: </span>
+                    <span class="data">{{JourneyRes.$destination}}</span>
+                </div>
+                <div class="dataItem">
+                    <span class="label">Price: </span>
+                    <span class="data">{{JourneyRes.$price}}</span>
+                </div>
+                <div class="dataItem center">
+                    <span class="label">Journey </span>
+                    <br><br>
+                </div>
             </div>
-            <div class="dataItem">
-                <span class="label">Origin: </span>
-                <span class="data">{{JourneyRes.$origins}}</span>
-            </div>
-            <div class="dataItem">
-                <span class="label">Destination: </span>
-                <span class="data">{{JourneyRes.$destination}}</span>
-            </div>
-            <div class="dataItem">
-                <span class="label">Price: </span>
-                <span class="data">{{JourneyRes.$price}}</span>
-            </div>
-            <div class="dataItem center">
-                <span class="label">Journey </span>
-                <br><br>
+
+            <div class="JourneyWrapper" *ngFor="let JourneyResItem of JourneyRes.$flights">
+                <div class="dataItem">
+                    <span class="label">Origin: </span>
+                    <span class="data">{{JourneyResItem.$origin}}</span>
+                </div>
+                <div class="dataItem">
+
+                    <span class="label">Destination: </span>
+                    <span class="data">{{JourneyResItem.$destination}}</span>
+                </div>
+                <div class="dataItem">
+
+                    <span class="label">Price: </span>
+                    <span class="data">{{JourneyResItem.$price}}</span>
+                </div>
+                <div class="dataItem center">
+                    <span class="label">Transport: </span>
+                </div>
+                <div class="dataItem">
+                    <span class="label"> - Flight Carrier: </span>
+                    <span class="data">{{JourneyResItem.$transport.$flightCarrier}}</span>
+                </div>
+                <div class="dataItem">
+                    <span class="label"> - Flight Number: </span>
+                    <span class="data">{{JourneyResItem.$transport.$flightNumber}}</span>
+                </div>
             </div>
         </div>
-        
-
-        <div class="JourneyWrapper" *ngFor="let JourneyResItem of JourneyRes.$flights">
-            <div class="dataItem">
-
-                <span class="label">Origin: </span>
-                <span class="data">{{JourneyResItem.$origin}}</span>
-            </div>
-            <div class="dataItem">
-
-                <span class="label">Destination: </span>
-                <span class="data">{{JourneyResItem.$destination}}</span>
-            </div>
-            <div class="dataItem">
-
-                <span class="label">Price: </span>
-                <span class="data">{{JourneyResItem.$price}}</span>
-            </div>
-            <div class="dataItem center">
-                <span class="label">Transport: </span>
-            </div>
-            <div class="dataItem">
-                <span class="label"> - Flight Carrier: </span>
-                <span class="data">{{JourneyResItem.$transport.$flightCarrier}}</span>
-            </div>
-            <div class="dataItem">
-                <span class="label"> - Flight Number: </span>
-                <span class="data">{{JourneyResItem.$transport.$flightNumber}}</span>
-            </div>
-        </div>
-        <br><br><br><br><br><br>
+        <ng-template #Void>
+            <h4>We do not have a journey for the selected locations</h4>
+        </ng-template>
+        <br><br>
         <button mat-raised-button color="primary" (click)="showJourney=false">Try again!</button>
+        <br><br><br><br><br><br>
+
     </div>
 </div>

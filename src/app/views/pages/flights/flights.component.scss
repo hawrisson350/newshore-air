@@ -28,7 +28,7 @@
         width: 100%;
         max-width: 500px;
         display: inline-flex;
-        align-items: start;
+        align-items: flex-start;
         flex-direction: column;
 
 
@@ -40,7 +40,7 @@
         .data,
         .label {
             display: inline-block;
-            width: 50%;
+            margin-right: 5px;
         }
 
         .dataItem{
@@ -58,11 +58,12 @@
         max-width: 500px;
         display: inline-flex;
         flex-direction: column;
-        align-items: start;
+        align-items: flex-start;
         margin: 10px;
         padding: 15px 30px;
         box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
         border-radius: 5px 5px;
+        box-sizing: border-box;
 
         .label {
             color: #397575;
@@ -72,7 +73,7 @@
         .data,
         .label {
             display: inline-block;
-            width: 50%;
+            margin-right: 5px;
         }
 
         .dataItem{
@@ -83,6 +84,15 @@
     }
 
     .center{
+        text-align: center;
+    }
+
+    h4{
+        color: #397575;
+        font-size: 30px;
+        font-weight: bold;
+        margin: 50px 0;
+        line-height: 1;
         text-align: center;
     }
 }
