@@ -6,7 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class HttpReqsService {
 
-  public api =  "https://recruiting-api.newshore.es/api/";
+  public api = "https://recruiting-api.newshore.es/api/";
+  public currency = "http://data.fixer.io/api/latest?access_key=bce66745f0069156d1dd0c6843ca6049&format=1";
 
   constructor(private http: HttpClient) { }
 
@@ -14,16 +15,8 @@ export class HttpReqsService {
     return this.http.get<any>(this.api + url);
   }
 
-  public post(url: string, DATA: any) {
-    return this.http.post(this.api + url, DATA);
-  }
-
-  public delete(url: string) {
-    return this.http.delete(this.api + url);
-  }
-
-  public put(url: string, DATA: any) {
-    return this.http.put(this.api + url, DATA);
+  public convertCurrency() {
+    return this.http.get<any>(this.currency);
   }
 
 }

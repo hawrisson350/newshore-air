@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Flight } from 'src/app/data/schema/Flight';
 import { Journey } from 'src/app/data/schema/Journey';
 import { FlightRq } from 'src/app/data/schema/RqResponse.interface';
@@ -17,13 +17,15 @@ export class FlightsComponent implements OnInit {
   originList: string[] = [];
   destinationList: string[] = [];
   JourneyRes!: Journey;
+  currencyList: any[] = [];
+  currencyBase: any;
   showJourney = false;
 
   formJourney = new FormBuilder().group({
-    origin: [''],
-    destination: [''],
+    origin: ['',Validators.required],
+    destination: ['',Validators.required],
+    currency: ['',Validators.required]
   });
-
 
   constructor(
     private httpReqs: HttpReqsService,
@@ -58,50 +60,94 @@ export class FlightsComponent implements OnInit {
         this.destinationList = [...CdestinationList];
       }
     );
+
+    this.httpReqs.convertCurrency()
+      .subscribe(resp => {
+        this.currencyBase = resp.base;
+        this.formJourney.get("currency")?.setValue(this.currencyBase);
+        Object.keys(resp.rates).forEach(key => {
+          this.currencyList.push({
+            currency: key,
+            value: resp.rates[key]
+          });
+        });
+
+      });
   }
 
   getJourney() {
-    const OriginSelected = this.formJourney.get('origin')?.value;
-    const DestinationSelected = this.formJourney.get('destination')?.value;
-    let originArr: Flight[] = [];
-    let flightsMap: Flight[] = [];
-    let priceTot=0;
+    if (this.formJourney.valid) {
+      const OriginSelected = this.formJourney.get('origin')?.value;
+      const DestinationSelected = this.formJourney.get('destination')?.value;
+      const CurrencySelected = this.formJourney.get('currency')?.value ?? "";
 
-    this.mappedData.map((item) => {
-      if (item.$origin == OriginSelected) {
-        originArr.push(item)
-      }
-    });
+      const originArr: Flight[] = [];
+      const flightsMap: Flight[] = [];
+      let priceTot = 0;
 
-    originArr.map(originItem => {
-      if (originItem.$destination === DestinationSelected) {
-        flightsMap.push(originItem);
-      }
-
-      this.mappedData.map(itemMap => {
-        if (originItem.$destination === itemMap.$origin) {
-          if (itemMap.$destination === DestinationSelected) {
-            flightsMap.push(originItem);
-            flightsMap.push(itemMap);
-          }
+      this.mappedData.map((item) => {
+        if (item.$origin === OriginSelected) {
+          originArr.push(new Flight(
+            item.$transport,
+            item.$origin,
+            item.$destination,
+            item.$price));
         }
-      })
-    })
-
-    if(flightsMap.length){
-      flightsMap.map(itemF=>{
-        priceTot+=itemF.$price
       });
+
+      originArr.map(originItem => {
+        if (originItem.$destination === DestinationSelected) {
+          originItem.$price = this.convertCurrency(CurrencySelected,originItem.$price);
+          flightsMap.push(originItem);
+        }
+
+        this.mappedData.map(itemMappedData => {
+          let itemMap = new Flight(
+            itemMappedData.$transport,
+            itemMappedData.$origin,
+            itemMappedData.$destination,
+            itemMappedData.$price);
+
+          if (originItem.$destination === itemMap.$origin) {
+            if (itemMap.$destination === DestinationSelected) {
+              originItem.$price = this.convertCurrency(CurrencySelected,originItem.$price);
+              flightsMap.push(originItem);
+              itemMap.$price = this.convertCurrency(CurrencySelected,itemMap.$price);;
+              flightsMap.push(itemMap);
+            }
+          }
+        })
+      })
+
+      if (flightsMap.length) {
+        flightsMap.map(itemF => {
+          priceTot += itemF.$price
+        });
+      }
+
+      this.JourneyRes = new Journey(
+        flightsMap,
+        OriginSelected ?? "",
+        DestinationSelected ?? "",
+        priceTot
+      );
+
+      this.showJourney = true;
     }
+    return false;
+  }
 
-    this.JourneyRes = new Journey(
-      flightsMap,
-      OriginSelected ?? "",
-      DestinationSelected ?? "",
-      priceTot
-    );
+  convertCurrency(currency:string, value:number) {
+    const baseValue = this.currencyList.find(i => i.currency === this.currencyBase);
+    const baseValueUSD = this.currencyList.find(i => i.currency === "USD");
+    const baseValueConverted = value * (baseValue.value / baseValueUSD.value);
 
-    this.showJourney = true;
+    const currencyValue = this.currencyList.find(i => i.currency === currency);
+    const currencyValueConverted = baseValueConverted * currencyValue.value;
+
+    console.log(currencyValueConverted);
+    
+    return currencyValueConverted;
   }
 
 }

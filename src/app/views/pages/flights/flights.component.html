@@ -18,6 +18,15 @@
             </mat-select>
         </mat-form-field>
 
+        <mat-form-field>
+            <mat-label>Currency price</mat-label>
+            <mat-select formControlName="currency">
+                <mat-option *ngFor="let currencyItem of currencyList" [value]="currencyItem.currency">
+                    {{currencyItem.currency}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
         <button mat-raised-button color="primary" (click)="getJourney()">Send</button>
     </form>
     <div class="JourneyMainWrap" *ngIf="showJourney">
@@ -37,7 +46,7 @@
                 </div>
                 <div class="dataItem">
                     <span class="label">Price: </span>
-                    <span class="data">{{JourneyRes.$price}}</span>
+                    <span class="data">{{JourneyRes.$price | currency}} {{this.formJourney.get('currency')?.value}}</span>
                 </div>
                 <div class="dataItem center">
                     <span class="label">Journey </span>
@@ -58,7 +67,7 @@
                 <div class="dataItem">
 
                     <span class="label">Price: </span>
-                    <span class="data">{{JourneyResItem.$price}}</span>
+                    <span class="data">{{JourneyResItem.$price | currency}} {{this.formJourney.get('currency')?.value}}</span>
                 </div>
                 <div class="dataItem center">
                     <span class="label">Transport: </span>
