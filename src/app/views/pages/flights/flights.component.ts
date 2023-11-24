@@ -17,6 +17,7 @@ export class FlightsComponent implements OnInit {
   originList: string[] = [];
   destinationList: string[] = [];
   JourneyRes!: Journey;
+  showJourney = false;
 
   formJourney = new FormBuilder().group({
     origin: [''],
@@ -99,8 +100,6 @@ export class FlightsComponent implements OnInit {
       DestinationSelected ?? "",
       priceTot
     );
-
-
   }
 
 }

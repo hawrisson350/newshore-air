@@ -29,6 +29,8 @@
 
         <button mat-raised-button color="primary" (click)="getJourney()">Send</button>
     </form>
-
+<div class="JourneyWrap" *ngIf="showJourney">
+    showJourney
+</div>
     {{JourneyRes | json}}
 </div>
