@@ -1,0 +1,34 @@
+<div class="flightMainWrap">
+    <!-- <div class="flightWrapper" *ngFor="let flight of mappedData">
+        <span class="label">Origin: </span>
+        <span class="data">{{flight.$origin}}</span>
+        <br>
+        <span class="label">Destination: </span>
+        <span class="data">{{flight.$destination}}</span>
+    </div>
+
+    {{mappedData |json}} -->
+    <form class="formWrap" [formGroup]="formJourney">
+        <mat-form-field>
+            <mat-label>Origin</mat-label>
+            <mat-select formControlName="origin">
+                <mat-option *ngFor="let origin of originList" [value]="origin">
+                    {{origin}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Destination</mat-label>
+            <mat-select formControlName="destination">
+                <mat-option *ngFor="let destination of destinationList" [value]="destination">
+                    {{destination}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="getJourney()">Send</button>
+    </form>
+
+    {{JourneyRes | json}}
+</div>
