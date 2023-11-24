@@ -100,6 +100,8 @@ export class FlightsComponent implements OnInit {
       DestinationSelected ?? "",
       priceTot
     );
+
+    this.showJourney = true;
   }
 
 }

@@ -1,14 +1,5 @@
 <div class="flightMainWrap">
-    <!-- <div class="flightWrapper" *ngFor="let flight of mappedData">
-        <span class="label">Origin: </span>
-        <span class="data">{{flight.$origin}}</span>
-        <br>
-        <span class="label">Destination: </span>
-        <span class="data">{{flight.$destination}}</span>
-    </div>
-
-    {{mappedData |json}} -->
-    <form class="formWrap" [formGroup]="formJourney">
+    <form class="formWrap" [formGroup]="formJourney" *ngIf="!showJourney">
         <mat-form-field>
             <mat-label>Origin</mat-label>
             <mat-select formControlName="origin">
@@ -29,8 +20,60 @@
 
         <button mat-raised-button color="primary" (click)="getJourney()">Send</button>
     </form>
-<div class="JourneyWrap" *ngIf="showJourney">
-    showJourney
-</div>
-    {{JourneyRes | json}}
+    <div class="JourneyMainWrap" *ngIf="showJourney">
+        <div class="journeyInfo">
+            <div class="dataItem center">
+                <span class="label"> ---Journey Info--- </span>
+                <br><br>
+            </div>
+            <div class="dataItem">
+                <span class="label">Origin: </span>
+                <span class="data">{{JourneyRes.$origins}}</span>
+            </div>
+            <div class="dataItem">
+                <span class="label">Destination: </span>
+                <span class="data">{{JourneyRes.$destination}}</span>
+            </div>
+            <div class="dataItem">
+                <span class="label">Price: </span>
+                <span class="data">{{JourneyRes.$price}}</span>
+            </div>
+            <div class="dataItem center">
+                <span class="label">Journey </span>
+                <br><br>
+            </div>
+        </div>
+        
+
+        <div class="JourneyWrapper" *ngFor="let JourneyResItem of JourneyRes.$flights">
+            <div class="dataItem">
+
+                <span class="label">Origin: </span>
+                <span class="data">{{JourneyResItem.$origin}}</span>
+            </div>
+            <div class="dataItem">
+
+                <span class="label">Destination: </span>
+                <span class="data">{{JourneyResItem.$destination}}</span>
+            </div>
+            <div class="dataItem">
+
+                <span class="label">Price: </span>
+                <span class="data">{{JourneyResItem.$price}}</span>
+            </div>
+            <div class="dataItem center">
+                <span class="label">Transport: </span>
+            </div>
+            <div class="dataItem">
+                <span class="label"> - Flight Carrier: </span>
+                <span class="data">{{JourneyResItem.$transport.$flightCarrier}}</span>
+            </div>
+            <div class="dataItem">
+                <span class="label"> - Flight Number: </span>
+                <span class="data">{{JourneyResItem.$transport.$flightNumber}}</span>
+            </div>
+        </div>
+        <br><br><br><br><br><br>
+        <button mat-raised-button color="primary" (click)="showJourney=false">Try again!</button>
+    </div>
 </div>
